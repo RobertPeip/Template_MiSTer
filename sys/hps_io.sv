@@ -164,6 +164,9 @@ module hps_io #(parameter CONF_STR, CONF_STR_BRAM=1, PS2DIV=0, WIDE=0, VDNUM=1, 
 	// UART flags
 	output reg  [7:0] uart_mode,
 	output reg [31:0] uart_speed,
+	
+	//heartbeat - written once every user_io poll
+	output reg        heartbeat,
 
 	// for core-specific extensions
 	inout      [35:0] EXT_BUS
@@ -543,6 +546,9 @@ always@(posedge clk_sys) begin : uio_block
 								3: {uart_speed, uart_mode} <= {io_din, tmp1, tmp2};
 							endcase
 						end
+
+				//heartbeat
+				'h41: heartbeat <= !heartbeat;
 			endcase
 		end
 	end
